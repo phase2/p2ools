@@ -17,4 +17,14 @@ referenced.
     php > if ($a['abc'] === NULL) echo "foobar";
     foobar
 
+Tired of repeating `return isset($a[$foo]) ? $a[$foo] : 'abc';`? Skip that noise
+and use `ArrWrap::val_or`:
+
+    php > echo $a->val_or('abc', 1);
+    1
+    php > $a['yo'] = 'bar';
+    php > echo $a->val_or('yo', 1);
+    bar
+
+
 
