@@ -6,9 +6,9 @@
  */
 class Logger {
 
-  public static $ERROR = 0;
-  public static $WARN = 1;
-  public static $INFO = 2;
+  const ERROR = 0;
+  const WARN = 1;
+  const INFO = 2;
   public $VERBOSITY = 1;
  
   function __construct($module_name, $verbosity_level=null) {
@@ -33,15 +33,15 @@ class Logger {
   }
 
   public function info($msg) {
-    $this->log($msg, $this->INFO);
+    $this->log($msg, self::INFO);
   }
                                   
   public function warn($msg) {
-    $this->log($msg, $this->WARN);
+    $this->log($msg, self::WARN);
   }
                                    
   public function error($msg) {
-    $this->log($msg, $this->ERROR);
+    $this->log($msg, self::ERROR);
   }
             
 }
