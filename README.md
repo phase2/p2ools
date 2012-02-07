@@ -26,5 +26,15 @@ and use `ArrWrap::val_or`:
     php > echo $a->val_or('yo', 1);
     bar
 
+## Logger
+
+A logging abstraction tool that logs to drupal's watchdog.
+
+### Usage
+
+    $log = new Logger('modulename', Logger::INFO);
+    $log->info('I need to test the watchdog log!');
+    $log->error('Unexpected result', __FILE__, __LINE__);
+    $log->warn('I warned you!', __FILE__);
 
 
