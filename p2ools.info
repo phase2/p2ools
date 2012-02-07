@@ -1,0 +1,9 @@
+name = p2ools
+description = "Utilities for interacting with Drupal in a sane way"
+package = "P2ools"
+core = 7.x
+
+files[] = Tax.class.php
+files[] = Logger.class.php
+files[] = tests/tax.test
+

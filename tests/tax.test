@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * Test taxonomy utilities. Extends a Drupal core test case for
+ * convenience.
+ */
+
+class TaxTestCase extends TaxonomyWebTestCase {
+
+  protected $usr;
+  private $term_name = "foobar";
+  private $vocab;
+  private $term;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'p2ools Tax test case',
+      'description' => 'A test of utilities used for taxonomy manipulation.',
+      'group' => 'p2ools',
+    );
+  }
+
+  /**
+   * Create a vocabulary, add a term.
+   */
+  function setUp() {
+    parent::setUp('p2ools');
+
+    $this->usr = $this->drupalCreateUser(array(
+      'administer taxonomy',
+    ));
+    $this->drupalLogin($this->usr);
+
+    $this->vocab = $this->createVocabulary();
+
+    $term = new stdClass();
+    $term->name = $this->term_name;
+    $term->description = "baz!";
+    $term->format = \
+      db_query_range('SELECT format FROM {filter_format}', 0, 1)->fetchField(); 
+    $term->vid = $this->vocab->vid;
+    taxonomy_term_save($term);
+    $this->term = $term;
+  }
+
+  /**
+   * Test the Tax utility class.
+   */
+  function testTax() {
+    $tax = new Tax();
+    $terms = array(
+      $tax->get_term("foobar"), 
+      $tax->get_term("foobar", $this->vocab->vid), 
+      $tax->get_term("foobar", $this->vocab->machine_name), 
+      $tax->get_term($this->term->tid, $this->vocab->machine_name), 
+      $tax->get_term($this->term->tid), 
+    );
+
+    foreach ($terms as $term) {
+      $this->assertEqual($term_name, $term->name, "Name correct.");
+      $this->assertEqual($this->term->tid, $term->tid, "TID correct.");
+    }
+  }
+}
