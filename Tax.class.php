@@ -56,7 +56,7 @@ class Tax {
       $vocab = taxonomy_vocabulary_machine_name_load($id);
 
       if (!$vocab) {
-        throw new Exception("Couldn't find vocab of machine name '${id}'.");
+        $this->lg->error("Couldn't find vocab of machine name '${id}'.");
         return false;
       }
 
