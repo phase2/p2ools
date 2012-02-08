@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * Test ArrWrap.
+ */
+
+class ArrWrapTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'p2ools ArrWrap test case',
+      'description' => 'A test for the ArrWrap array wrapper.',
+      'group' => 'p2ools',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('p2ools');
+  }
+
+  function testArrWrap() {
+    $arr = new ArrayWrap();
+    $arr['abc'] = 123;
+    
+    $this->assertEqual(123, $arr['abc'], "Indexes correctly.");
+    $this->assertEqual(null, $arr['foobar'], "Nulls correctly.");
+    $this->assertEqual(123, $arr->val_or('abc', 'heyfoo'), 
+                       "val_or existent key works.");
+    $this->assertEqual('heyfoo', $arr->val_or('foobar', 'heyfoo'), 
+                       "val_or default works.");
+  }
+}

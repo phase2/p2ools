@@ -5,5 +5,7 @@ core = 7.x
 
 files[] = Tax.class.php
 files[] = Logger.class.php
+files[] = ArrWrap.class.php
 files[] = tests/tax.test
+files[] = tests/arrwrap.test
 
