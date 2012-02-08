@@ -53,7 +53,72 @@ Taxonomy manipulation done easier.
 
 #### Usage
 
+##### Fancy taxonomy indexing
+
+    php> $tax_util = new Tax();
+
+    php> = $tax_util->get_term('foobar');
+    false
     
+    php> $tax_term = new stdClass();
+    php> $tax_term->name = "foobar";
+    php> $tax_term->vid = 1;
+    php> = taxonomy_term_save($tax_term);
+    1
+
+    php> $the_term = $tax_util->get_term('foobar');
+    php> = $the_term
+    <object #92 of type stdClass> {
+      tid => "1",
+      vid => "1",
+      name => "foobar",
+      description => null,
+      format => null,
+      weight => "0",
+      vocabulary_machine_name => "tags",
+      rdf_mapping => array(
+        "rdftype" => array(
+          0 => "skos:Concept",
+        ),
+        "name" => array(
+          "predicates" => array(
+            0 => "rdfs:label",
+            1 => "skos:prefLabel",
+          ),
+        ),
+        "description" => array(
+          "predicates" => array(
+            0 => "skos:definition",
+          ),
+        ),
+        "vid" => array(
+          "predicates" => array(
+            0 => "skos:inScheme",
+          ),
+          "type" => "rel",
+        ),
+        "parent" => array(
+          "predicates" => array(
+            0 => "skos:broader",
+          ),
+          "type" => "rel",
+        ),
+      ),
+    }        
+    php> assert ($the_term == $tax_util->get_term('foobar', 1))
+    php> assert ($the_term == $tax_util->get_term('foobar', 'tags'))
+    php> assert ($the_term == $tax_util->get_term(1, 1))
+    php> assert ($the_term == $tax_util->get_term(1, 'tags'))
+
+##### Easy tid retrieval
+
+    php> // use with the same args above
+    php> = $tax_util->get_tid(1)
+    "1"
+    php> = $tax_util->get_tid('foobar')
+    "1"
+    php> = $tax_util->get_tid('foobar', 'tags')
+    "1"
 
 ### ArrWrap
       
