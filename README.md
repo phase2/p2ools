@@ -51,6 +51,13 @@ name and features logging levels.
 
 Taxonomy manipulation done easier.
 
+#### Summary
+
+* `Tax::get_term(name_or_tid [,vocab_name_or_vid])`: An easy way to retrieve 
+  a taxonomy object.
+* `Tax::get_tid(name_or_tid [,vocab_name_or_vid])`: An easy way to retrieve a
+  tid.
+
 #### Usage
 
 ##### Fancy taxonomy indexing

@@ -10,6 +10,7 @@ curl -X POST --data-urlencode content@README.md \
 git checkout gh-pages
 git rm -rf index.html
 mv new_index.html index.html
+git add index.html
 git commit -am 'page update'
 git push
 git checkout master
