@@ -4,7 +4,7 @@
  * Test ArrWrap.
  */
 
-class ArrWrapTestCase extends DrupalUnitTestCase {
+class ArrWrapTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -19,7 +19,7 @@ class ArrWrapTestCase extends DrupalUnitTestCase {
   }
 
   function testArrWrap() {
-    $arr = new ArrayWrap();
+    $arr = new ArrWrap();
     $arr['abc'] = 123;
     
     $this->assertEqual(123, $arr['abc'], "Indexes correctly.");
