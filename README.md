@@ -23,6 +23,7 @@ Afterwards, all of the classes contained in p2ools will be at your disposal.
 
 ## Guidelines for contribution
                           
+* Pull requests should be submitted for contributions.
 * All contributed code must have corresponding unit-tests written and placed
   in `tests/`. The goal here is to have 100% test coverage of p2ools.
 * Contributed code must follow the Drupal style guide.
