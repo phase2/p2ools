@@ -5,6 +5,7 @@ serve as a point of consolidation for utilities that are written and re-written
 across Drupal projects.
 
 P2ools currently includes
+
 * an array wrapper,
 * a fancier taxonomy API, and
 * a logging abstraction.
@@ -13,6 +14,7 @@ P2ools currently includes
 
 * All contributed code must have corresponding unit-tests written and placed
   in `tests/`. The goal here is to have 100% test coverage of p2ools.
+* Contributed code must follow the Drupal style guide.
 
 ## Running the tests
 
