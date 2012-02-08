@@ -1,0 +1,15 @@
+#!/bin/bash
+
+curl -X POST --data-urlencode content@README.md \
+  --data-urlencode repo='phase2/p2ools' \
+  --data-urlencode name='p2ools' \
+  --data-urlencode twitter='phase2tech' \
+  --data-urlencode twitter='jamesob' \
+  http://documentup.com/compiled > new_index.html 
+
+git checkout gh-pages
+git rm -rf index.html
+mv new_index.html index.html
+git commit -am 'page update'
+git push
+git checkout master
