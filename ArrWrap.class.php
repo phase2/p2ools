@@ -1,9 +1,14 @@
 <?php
 
 class ArrWrap implements ArrayAccess, IteratorAggregate {
-
+  /**
+   * A reference to the underlying array we're wrapping.
+   */
   public $arr;
 
+  /**
+   * @param &$existing_arr A reference to the array we want to wrap.
+   */
   function __construct(&$existing_arr=null) {
     $this->arr = (is_null($existing_arr)) ? array() : $existing_arr;
   }
@@ -16,8 +21,7 @@ class ArrWrap implements ArrayAccess, IteratorAggregate {
     $ret_val = null;
 
     if (function_exists('array_' . $func)) {
-      array_unshift($args, $this->arr);
-      $ret_val = call_user_func_array('array_' . $func, $args);
+      $ret_val = $this->callArrayFunc($func, $args);
     }
     else if (!$args) {
       $ret_val =& $this->arr;
@@ -27,6 +31,22 @@ class ArrWrap implements ArrayAccess, IteratorAggregate {
     }
 
     return $this->wrap($ret_val);
+  }
+
+  /**
+   * Make a call to an array_ function.
+   *
+   * @param $func The function
+   * @param $args An array of args passed to the function
+   * @param $array_pos The position of the array being operated on in the 
+   *   function's arguments.
+   */
+  private function callArrayFunc($func, $args, $array_pos=0) {
+    $args = array_merge(array_slice($args, 0, $array_pos),
+                        array($this->arr),
+                        array_slice($args, $array_pos));
+
+    return call_user_func_array('array_' . $func, $args);
   }
 
   /**
@@ -99,12 +119,21 @@ class ArrWrap implements ArrayAccess, IteratorAggregate {
   }
 
   /**
+   * A wrapper for array_map.
+   *
+   * @param $callback The callback to apply to this object's array.
+   */
+  public function map($callback) {
+    $ret_val = $this->callArrayFunc('map', array($callback), 1);
+    return $this->wrap($ret_val);
+  }
+
+  /**
    * Utility method for converting a return value into an ArrWrap object if
    * it is an array.
    */
   private function wrap($value) {
     return (is_array($value)) ? new ArrWrap($value) : $value;
   }
-                                 
 }
 

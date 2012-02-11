@@ -23,8 +23,8 @@ class ArrWrapTestCase extends DrupalWebTestCase {
     $this->arrw['abc'] = 123;
     $this->arrw['arr'] = array(1, 2, 3);
 
-    $base = array(1, 2, 3, 4, 5);
-    $this->arr_i = new ArrWrap($base);
+    $this->base_i = array(1, 2, 3, 4, 5);
+    $this->arr_i = new ArrWrap($this->base_i);
   }
 
   function testBasic() {
@@ -50,13 +50,11 @@ class ArrWrapTestCase extends DrupalWebTestCase {
   }
 
   function testArrayFunctions() {
-    $base = array(1, 2, 3, 4, 5);
-    $arrw = new ArrWrap($base);
 
-    $this->assertEqual(count($base), $this->arr_i->count(), "Count works.");
-    $this->assertEqual(array_unique($base), $this->arr_i->unique()->arr, 
+    $this->assertEqual(count($this->base_i), $this->arr_i->count(), "Count works.");
+    $this->assertEqual(array_unique($this->base_i), $this->arr_i->unique()->arr, 
                        "Unique works.");
-    $this->assertEqual(array_chunk($base, 2), $this->arr_i->chunk(2)->arr, 
+    $this->assertEqual(array_chunk($this->base_i, 2), $this->arr_i->chunk(2)->arr, 
                        "Chunk works.");
   }
 
@@ -67,6 +65,16 @@ class ArrWrapTestCase extends DrupalWebTestCase {
       $this->assertEqual($test_i, $i, "Index works in iteration.");
       $this->assertEqual($test_i + 1, $num, "Value works in iteration.");
       $test_i++;
+    }
+  }
+
+  function testMap() {
+    $m = $this->arr_i->map(function ($x) { return $x * $x; });
+
+    foreach ($m as $i => $num) {
+      $this->assertEqual($this->base_i[$i] * $this->base_i[$i],
+                         $num,
+                         "Map works.");
     }
   }
 }
