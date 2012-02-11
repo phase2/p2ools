@@ -14,19 +14,59 @@ class ArrWrapTestCase extends DrupalWebTestCase {
     );
   }
 
+  public $arrw;
+
   function setUp() {
     parent::setUp('p2ools');
+
+    $this->arrw = new ArrWrap();
+    $this->arrw['abc'] = 123;
+    $this->arrw['arr'] = array(1, 2, 3);
+
+    $base = array(1, 2, 3, 4, 5);
+    $this->arr_i = new ArrWrap($base);
   }
 
-  function testArrWrap() {
-    $arr = new ArrWrap();
-    $arr['abc'] = 123;
-    
-    $this->assertEqual(123, $arr['abc'], "Indexes correctly.");
-    $this->assertEqual(null, $arr['foobar'], "Nulls correctly.");
-    $this->assertEqual(123, $arr->val_or('abc', 'heyfoo'), 
+  function testBasic() {
+    $this->assertEqual(123, $this->arrw['abc'], "Indexes correctly.");
+
+    $this->assertEqual(null, $this->arrw['foobar'], "Nulls correctly.");
+
+    $this->assertEqual(123, $this->arrw->val_or('abc', 'heyfoo'), 
                        "val_or existent key works.");
-    $this->assertEqual('heyfoo', $arr->val_or('foobar', 'heyfoo'), 
+
+    $this->assertEqual('heyfoo', $this->arrw->val_or('foobar', 'heyfoo'), 
                        "val_or default works.");
+  }
+
+  /**
+   * Ensure that ArrWrap is holding a reference to an array.
+   */
+  function testRef() {
+    $arr_ref =& $this->arrw->arr;
+    $arr_ref['foobaz'] = 1;
+
+    $this->assertEqual(1, $this->arrw['foobaz'], "ArrWrap holds a reference.");
+  }
+
+  function testArrayFunctions() {
+    $base = array(1, 2, 3, 4, 5);
+    $arrw = new ArrWrap($base);
+
+    $this->assertEqual(count($base), $this->arr_i->count(), "Count works.");
+    $this->assertEqual(array_unique($base), $this->arr_i->unique()->arr, 
+                       "Unique works.");
+    $this->assertEqual(array_chunk($base, 2), $this->arr_i->chunk(2)->arr, 
+                       "Chunk works.");
+  }
+
+  function testIteration() {
+    $test_i = 0;
+
+    foreach ($this->arr_i as $i => $num) {
+      $this->assertEqual($test_i, $i, "Index works in iteration.");
+      $this->assertEqual($test_i + 1, $num, "Value works in iteration.");
+      $test_i++;
+    }
   }
 }

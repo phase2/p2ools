@@ -130,26 +130,107 @@ Taxonomy manipulation done easier.
 
 ### ArrWrap
       
-An Array-like object that returns `NULL` when a key that does not exist is
-referenced.
+When you're writing PHP, you're using arrays. A lot. Unfortunately, arrays
+in PHP are pretty cumbersome.
+
+Wouldn't you like an array that
+
+* returns null if the key you've referenced doesn't exist?
+* allows you to use it like an object, including all array functions as methods?
+* is subclass-able?
+* includes nice utility methods?
+
+Wait no longer. 
+
+`ArrWrap` is an Array-like object that makes using arrays easier at almost no 
+performance cost, since it just wraps array references. Check out a sample 
+usage.
     
 #### Usage
 
-    php > $a = new ArrWrap();
-    php > $a[1] = 2;
-    php > echo $a[1];
+    php> $a = new ArrWrap();
+    php> $a[1] = 2;
+    php> = $a[1];
     2
-    php > echo $a['abc'];
-    php > if ($a['abc'] === NULL) echo "foobar";
+    php> = $a['abc'];
+    php> if (!$a['abc']) echo "foobar";
     foobar
 
-Tired of repeating `return isset($a[$foo]) ? $a[$foo] : 'abc';`? Skip that noise
+Tired of repeating `isset($a[$foo]) ? $a[$foo] : 'abc';`? Skip that noise
 and use `ArrWrap::val_or`:
 
-    php > echo $a->val_or('abc', 1);
+    php> echo $a->val_or('abc', 1);
     1
-    php > $a['yo'] = 'bar';
-    php > echo $a->val_or('yo', 1);
+    php> $a['yo'] = 'bar';
+    php> echo $a->val_or('yo', 1);
     bar
+
+How about more concise access to your favorite array functions?
+
+    php> $arr = new ArrWrap(array_fill(0, 5, 1));
+
+    php> = $arr->unique();
+    <object #607 of type ArrWrap> {
+      arr => array(
+        0 => 1,
+      ),
+    }
+
+    php> $u = $arr->unique();
+    php> = $u[0];
+    1
+
+    php> = $arr->merge(array(1, 2, 3));
+    <object #607 of type ArrWrap> {
+      arr => array(
+        0 => 1,
+        1 => 1,
+        2 => 1,
+        3 => 1,
+        4 => 1,
+        5 => 1,
+        6 => 2,
+        7 => 3,
+      ),
+    }
+
+    php> = $arr->chunk(2);
+    <object #607 of type ArrWrap> {
+      arr => array(
+        0 => array(
+          0 => 1,
+          1 => 1,
+        ),
+        1 => array(
+          0 => 1,
+          1 => 1,
+        ),
+        2 => array(
+          0 => 1,
+        ),
+      ),
+    }
+
+That's right: any `array_` function that accepts an array as the first
+argument is automagically a method of `ArrWrap` objects.
+
+But what about functions that aren't? Easy. The `arr` attribute of any
+`ArrWrap` object contains its underlying array.
+
+    php> = count($arr->arr);
+    5
+
+`ArrWrap` objects are also fully iterable.
+
+    php> foreach($arr as $num) {
+     ...   print_r($num);
+     ... }
+    11111
+
+    php> foreach($arr as $i => $num) {
+     ...   print_r("${i} => ${num}; ");
+     ... }
+    0 => 1; 1 => 1; 2 => 1; 3 => 1; 4 => 1;
+
 
 

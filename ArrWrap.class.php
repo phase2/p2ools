@@ -1,7 +1,61 @@
 <?php
 
-class ArrWrap extends ArrayObject 
-{
+class ArrWrap implements ArrayAccess, IteratorAggregate {
+
+  public $arr;
+
+  function __construct(&$existing_arr=null) {
+    $this->arr = (is_null($existing_arr)) ? array() : $existing_arr;
+  }
+
+  /**
+   * This is a hack to allow users to call "array_" functions as methods,
+   * automagically passing the underlying array as the first argument.
+   */
+  public function __call($func, $args) {
+    $ret_val = null;
+
+    if (function_exists('array_' . $func)) {
+      array_unshift($args, $this->arr);
+      $ret_val = call_user_func_array('array_' . $func, $args);
+    }
+    else if (!$args) {
+      $ret_val =& $this->arr;
+    }
+    else {
+      $ret_val = parent::__call($func, $arguments);
+    }
+
+    return $this->wrap($ret_val);
+  }
+
+  /**
+   * Magic method for ArrayAccess.
+   */
+  public function offsetSet($offset, $value) {
+    $value = $this->wrap($value);
+
+    if (is_null($offset)) {
+      $this->arr[] = $value;
+    }
+    else {
+      $this->arr[$offset] = $value;
+    }
+  }
+
+  /**
+   * Magic method for ArrayAccess.
+   */
+  public function offsetExists($offset) {
+    return array_key_exists($offset, $this->arr);
+  }
+
+  /**
+   * Magic method for ArrayAccess.
+   */
+  public function offsetUnset($offset) {
+    unset($this->arr[$offset]);
+  }
 
   /**
    * Override of offsetGet.
@@ -10,7 +64,14 @@ class ArrWrap extends ArrayObject
    * @return The value for key $k, if one exists; if not, return NULL.
    */
   public function offsetGet($k) {
-    return $this->val_or($k);
+    return $this->wrap($this->val_or($k));
+  }
+
+  /**
+   * For IteratorAggregate.
+   */
+  public function getIterator() {
+    return new ArrayIterator($this->arr);
   }
 
   /**
@@ -22,12 +83,28 @@ class ArrWrap extends ArrayObject
    * @return The value at $k or $default if $k doesn't exist.
    */
   public function val_or($k, $default=NULL) {
-    if ($this->offsetExists($k)) {
-      return parent::offsetGet($k);
+    if (array_key_exists($k, $this->arr)) {
+      return $this->arr[$k];
     }
     else {
       return $default;
     }
   }
+
+  /**
+   * A count wrapper.
+   */
+  public function count() {
+    return count($this->arr);
+  }
+
+  /**
+   * Utility method for converting a return value into an ArrWrap object if
+   * it is an array.
+   */
+  private function wrap($value) {
+    return (is_array($value)) ? new ArrWrap($value) : $value;
+  }
+                                 
 }
 
