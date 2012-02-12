@@ -77,9 +77,10 @@ Tests can be run using the following command:
 
 ### Logger
 
-A logging abstraction that wraps an arbitrary logging function. Keeps track of
-your module name, features logging levels, automatically provides file basename
-and line identification, and provides easy `print_r`ing.
+A logging abstraction that wraps an arbitrary logging function, but defaults to
+watchdog. `Logger` keeps track of your module name, features logging levels,
+automatically provides file basename and line identification, and provides easy
+`print_r`ing.
 
 #### Usage
 
