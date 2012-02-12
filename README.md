@@ -77,15 +77,20 @@ Tests can be run using the following command:
 
 ### Logger
 
-A logging abstraction that wraps Drupal's watchdog. Keeps track of your module
-name and features logging levels.
+A logging abstraction that wraps an arbitrary logging function. Keeps track of
+your module name, features logging levels, automatically provides file basename
+and line identification, and provides easy `print_r`ing.
 
 #### Usage
 
     $log = new Logger('modulename', Logger::INFO);
-    $log->info('I need to test the watchdog log!');
-    $log->error('Unexpected result', __FILE__, __LINE__);
-    $log->warn('I warned you!', __FILE__);
+
+    $log->info("I need to test the watchdog log.");
+    $log->error("This var will be print_r'd", $var);
+
+    $log->debug("This won't display because of the log level.");
+    $log->VERBOSITY = Logger::DEBUG;
+    $log->debug("Now it will!");
 
 ### Tax
 
