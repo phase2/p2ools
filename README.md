@@ -9,6 +9,7 @@ P2ools currently includes
 * a logging abstraction
 
 ```php
+<?php
 $lg = new Logger("foo_module");
 $lg->info("This is a var!", array(1, 2, 3));
 
@@ -23,6 +24,7 @@ $lg->info("This is a var!", array(1, 2, 3));
 * a fancier taxonomy API
 
 ```php
+<?php
 $t = new Tax();
 $t->get_term("saucy", "tags");
 
@@ -32,6 +34,7 @@ $t->get_term("saucy", "tags");
 * an array wraper
 
 ```php
+<?php
 $a = array(1, 2, 20, 25);
 $arr = new ArrWrap($a);
 $arr
