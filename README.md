@@ -6,9 +6,39 @@ across Drupal projects.
 
 P2ools currently includes
 
-* an array wrapper,
+* a logging abstraction,
+
+      $lg = new Logger("foo_module");
+      $lg->info("This is a var!", array(1, 2, 3));
+
+        => "[file basename]:[line] This is a var! Array
+            (
+                [0] => 1
+                [1] => 2
+                [2] => 3
+            )"
+
 * a fancier taxonomy API, and
-* a logging abstraction.
+
+    $t = new Tax();
+    $t->get_term("saucy", "tags");
+
+      => stdClass rep. of "saucy" term in "tags" vocab
+
+* an array wraper.
+
+    $a = array(1, 2, 20, 25);
+    $arr = new ArrWrap($a);
+    $arr
+      ->filter(function ($v) {return $v > 15;})
+      ->map(function($v) {return $v * 2;});
+
+      => <object #380 of type ArrWrap> {
+          arr => array(
+            2 => 40,
+            3 => 50,
+          ),
+        }
 
 ## Using it
 
@@ -20,6 +50,12 @@ Simply include the following in your Drush makefile:
     projects[p2ools][download][url] = git://github.com/phase2/p2ools.git 
 
 Afterwards, all of the classes contained in p2ools will be at your disposal.
+ 
+## Testing it
+
+Tests can be run using the following command:
+
+    drush test-run --uri=[url of test site] p2ools
 
 ## Guidelines for contribution
                           
@@ -27,12 +63,6 @@ Afterwards, all of the classes contained in p2ools will be at your disposal.
 * All contributed code must have corresponding unit-tests written and placed
   in `tests/`. The goal here is to have 100% test coverage of p2ools.
 * Contributed code must follow the Drupal style guide.
-
-## Running the tests
-
-Tests can be run using the following command:
-
-    drush test-run --uri=[url of test site] [classname of test case]
 
 ## API
 
@@ -129,7 +159,32 @@ Taxonomy manipulation done easier.
     "1"
 
 ### ArrWrap
+
+#### Real quick
+
+Check out this PHP:
+
+    $x = 1;
+    $nums = array(10, 20, 30, 40);
+
+    $arr = array();
+    foreach ($nums as $n)
+      if ($n > 15)
+        $arr[] = $n * 2 + $x;
+    $res = 0;
+    foreach ($arr as $r)
+      $res -= $r;
+
+Gross, right? Now check out this PHP:
       
+    $aw_nums = new ArrWrap($nums);
+    $res = $aw_nums
+      ->filter(function($v) {return $v > 15;})
+      ->map(function($v) use ($x) {return $v * 2 + $x;})
+      ->reduce(function($v, $w) {return $v + $w;});
+
+Now we're talkin'.
+
 When you're writing PHP, you're using arrays. A lot. Unfortunately, arrays
 in PHP are pretty cumbersome.
 
@@ -137,6 +192,7 @@ Wouldn't you like an array that
 
 * returns null if the key you've referenced doesn't exist?
 * allows you to use it like an object, including all array functions as methods?
+* allows method chaining?
 * is subclass-able?
 * includes nice utility methods?
 
@@ -167,7 +223,7 @@ and use `ArrWrap::val_or`:
 
 How about more concise access to your favorite array functions?
 
-    php> $arr = new ArrWrap(array_fill(0, 5, 1));
+    php> $arr = new ArrWrap(array_fill(0, 3, 1));
 
     php> = $arr->unique();
     <object #607 of type ArrWrap> {
@@ -187,10 +243,8 @@ How about more concise access to your favorite array functions?
         1 => 1,
         2 => 1,
         3 => 1,
-        4 => 1,
-        5 => 1,
-        6 => 2,
-        7 => 3,
+        4 => 2,
+        5 => 3,
       ),
     }
 
@@ -203,10 +257,6 @@ How about more concise access to your favorite array functions?
         ),
         1 => array(
           0 => 1,
-          1 => 1,
-        ),
-        2 => array(
-          0 => 1,
         ),
       ),
     }
@@ -218,19 +268,19 @@ But what about functions that aren't? Easy. The `arr` attribute of any
 `ArrWrap` object contains its underlying array.
 
     php> = count($arr->arr);
-    5
+    3
 
 `ArrWrap` objects are also fully iterable.
 
     php> foreach($arr as $num) {
      ...   print_r($num);
      ... }
-    11111
+    111
 
     php> foreach($arr as $i => $num) {
      ...   print_r("${i} => ${num}; ");
      ... }
-    0 => 1; 1 => 1; 2 => 1; 3 => 1; 4 => 1;
+    0 => 1; 1 => 1; 2 => 1;
 
 
 
