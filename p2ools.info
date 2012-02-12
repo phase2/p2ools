@@ -3,9 +3,10 @@ description = "Utilities for interacting with Drupal in a sane way"
 package = "P2ools"
 core = 7.x
 
-files[] = Tax.class.php
-files[] = Logger.class.php
+files[] = Tax/Tax.class.php
+files[] = Logger/Logger.class.php
 files[] = ArrWrap/ArrWrap.class.php
 files[] = tests/tax.test
 files[] = tests/arrwrap.test
+files[] = tests/logger.test
 

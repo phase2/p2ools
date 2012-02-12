@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * Test Logger.
+ */
+
+class LoggerTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'p2ools Logger test case',
+      'description' => 'A test for the Logger logging util.',
+      'group' => 'p2ools',
+    );
+  }
+
+  public $lg;
+  public $mock_log_msgs;
+
+  public function mock_logger($module, $msg) {
+    array_unshift($this->mock_log_msgs, "$msg");
+    print_r($this->mock_log_msgs);
+  }
+
+  function setUp() {
+    parent::setUp('p2ools');
+    $this->mock_log_msgs = array();
+    $this->lg = new Logger("test", Logger::INFO, array($this, "mock_logger"));
+  }
+
+  private function get_loc_str($line) {
+    $line = $line - 1;
+    $file = "logger.test";
+    return "$file:$line ";
+  }
+
+  function testBasic() {
+    $msg = "This will show!";
+    $this->lg->info($msg);
+    $this->assertTrue(strrpos($this->mock_log_msgs[0], $msg), 
+                      "basic logging works");
+
+    $this->lg->debug("This will not show.");
+    $this->assertTrue(strrpos($this->mock_log_msgs[0], $msg), 
+                      "logging levels work");
+  }
+
+  function testLocation() {
+    $msg = "This will show!";
+    $this->lg->info($msg);
+    $loc = $this->get_loc_str(__LINE__);
+    $this->assertTrue(strrpos($this->mock_log_msgs[0], $loc) == 0, 
+                      "backtrace works");
+  }
+
+  function testVarPrint() {
+    $msg = "This is a variable";
+    $var = array(1, 2, 3);
+    $var_str = print_r($var, true);
+
+    $this->lg->info($msg, $var);
+
+    $this->assertTrue(strrpos($this->mock_log_msgs[0], $var_str) > 0, 
+                      "variable printing works");
+  }
+}
