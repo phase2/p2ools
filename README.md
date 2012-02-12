@@ -6,39 +6,39 @@ across Drupal projects.
 
 P2ools currently includes
 
-* a logging abstraction,
+* a logging abstraction
 
-      $lg = new Logger("foo_module");
-      $lg->info("This is a var!", array(1, 2, 3));
+        $lg = new Logger("foo_module");
+        $lg->info("This is a var!", array(1, 2, 3));
 
-        => "[file basename]:[line] This is a var! Array
-            (
-                [0] => 1
-                [1] => 2
-                [2] => 3
-            )"
+          => "[file basename]:[line] This is a var! Array
+              (
+                  [0] => 1
+                  [1] => 2
+                  [2] => 3
+              )"
 
-* a fancier taxonomy API, and
+* a fancier taxonomy API
 
-    $t = new Tax();
-    $t->get_term("saucy", "tags");
+      $t = new Tax();
+      $t->get_term("saucy", "tags");
 
-      => stdClass rep. of "saucy" term in "tags" vocab
+        => stdClass rep. of "saucy" term in "tags" vocab
 
-* an array wraper.
+* an array wraper
 
-    $a = array(1, 2, 20, 25);
-    $arr = new ArrWrap($a);
-    $arr
-      ->filter(function ($v) {return $v > 15;})
-      ->map(function($v) {return $v * 2;});
+      $a = array(1, 2, 20, 25);
+      $arr = new ArrWrap($a);
+      $arr
+        ->filter(function ($v) {return $v > 15;})
+        ->map(function($v) {return $v * 2;});
 
-      => <object #380 of type ArrWrap> {
-          arr => array(
-            2 => 40,
-            3 => 50,
-          ),
-        }
+        => <object #380 of type ArrWrap> {
+            arr => array(
+              2 => 40,
+              3 => 50,
+            ),
+          }
 
 ## Using it
 
