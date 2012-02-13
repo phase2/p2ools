@@ -84,7 +84,7 @@ class ArrWrap implements ArrayAccess, IteratorAggregate {
    * @return The value for key $k, if one exists; if not, return NULL.
    */
   public function offsetGet($k) {
-    return $this->wrap($this->val_or($k));
+    return $this->wrap($this->get($k));
   }
 
   /**
@@ -102,7 +102,7 @@ class ArrWrap implements ArrayAccess, IteratorAggregate {
    * @param $default The default to return if the key doesn't exist
    * @return The value at $k or $default if $k doesn't exist.
    */
-  public function val_or($k, $default=NULL) {
+  public function get($k, $default=NULL) {
     if (array_key_exists($k, $this->arr)) {
       return $this->arr[$k];
     }

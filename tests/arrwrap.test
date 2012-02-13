@@ -32,11 +32,11 @@ class ArrWrapTestCase extends DrupalWebTestCase {
 
     $this->assertEqual(null, $this->arrw['foobar'], "Nulls correctly.");
 
-    $this->assertEqual(123, $this->arrw->val_or('abc', 'heyfoo'), 
-                       "val_or existent key works.");
+    $this->assertEqual(123, $this->arrw->get('abc', 'heyfoo'), 
+                       "get existent key works.");
 
-    $this->assertEqual('heyfoo', $this->arrw->val_or('foobar', 'heyfoo'), 
-                       "val_or default works.");
+    $this->assertEqual('heyfoo', $this->arrw->get('foobar', 'heyfoo'), 
+                       "get default works.");
   }
 
   /**

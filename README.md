@@ -228,12 +228,12 @@ usage.
     foobar
 
 Tired of repeating `isset($a[$foo]) ? $a[$foo] : 'abc';`? Skip that noise
-and use `ArrWrap::val_or`:
+and use `ArrWrap::get`:
 
-    php> echo $a->val_or('abc', 1);
+    php> echo $a->get('abc', 1);
     1
     php> $a['yo'] = 'bar';
-    php> echo $a->val_or('yo', 1);
+    php> echo $a->get('yo', 1);
     bar
 
 How about more concise access to your favorite array functions?
