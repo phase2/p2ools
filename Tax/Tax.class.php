@@ -29,7 +29,7 @@ class Tax {
    */
   public function get_tid($id, $vocab_id=null) {
     $tid = false;
-    $this->lg->info("Retrieving term with id ${id} from vocab ${vocab_id}.");
+    $this->lg->debug("Retrieving term with id ${id} from vocab ${vocab_id}.");
 
     $query = new EntityFieldQuery;
     $query->entityCondition('entity_type', 'taxonomy_term');

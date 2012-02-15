@@ -39,6 +39,13 @@ class ArrWrapTestCase extends DrupalWebTestCase {
                        "get default works.");
   }
 
+  function testNonArray() {
+    $i = 1;
+    $a = new ArrWrap($i);
+    $this->assertEqual(1, $a->count(), "Right number of elements.");
+    $this->assertTrue(is_array($a->arr), "Converted to array okay.");
+  }
+
   /**
    * Ensure that ArrWrap is holding a reference to an array.
    */

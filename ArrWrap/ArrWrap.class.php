@@ -7,10 +7,16 @@ class ArrWrap implements ArrayAccess, IteratorAggregate {
   public $arr;
 
   /**
-   * @param &$existing_arr A reference to the array we want to wrap.
+   * @param &$existing_arr A reference to the array or scalar we want to wrap.
+   *   If scalar, we will convert to an array. If null, create a new array.
    */
   function __construct(&$existing_arr=null) {
-    $this->arr = (is_null($existing_arr)) ? array() : $existing_arr;
+    $this->log = new Logger("arrwrap");
+    $this->arr = is_null($existing_arr) ? array() : $existing_arr;
+
+    if (!is_array($this->arr)) {
+      $this->arr = array($this->arr);
+    }
   }
 
   /**
