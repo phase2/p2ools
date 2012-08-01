@@ -14,8 +14,8 @@ class Tax {
     $this->lg = new Logger("p2ools Tax", Logger::INFO);
   }
 
-  public function get_term($id, $vocab_id=null) {
-    $tid = $this->get_tid($id, $vocab_id);
+  public function get_term($id, $vocab_id=null, $force_name=FALSE) {
+    $tid = $this->get_tid($id, $vocab_id, $force_name);
     return taxonomy_term_load($tid);
   }
 
@@ -24,16 +24,17 @@ class Tax {
    *
    * @param $id Name or tid of the term
    * @param $vocab Machine name or vid of the vocab
-   *
+   * @param $force_name always search on term name
+   * 
    * @return a single term, else false
    */
-  public function get_tid($id, $vocab_id=null) {
+  public function get_tid($id, $vocab_id=null, $force_name=FALSE) {
     $tid = false;
     $this->lg->debug("Retrieving term with id ${id} from vocab ${vocab_id}.");
 
     $query = new EntityFieldQuery;
     $query->entityCondition('entity_type', 'taxonomy_term');
-    $query->propertyCondition((is_numeric($id)) ? 'tid' : 'name', $id);
+    $query->propertyCondition((!$force_name && is_numeric($id)) ? 'tid' : 'name', $id);
 
     if (!is_null($vocab_id)) {
       $query->propertyCondition('vid', $this->resolve_vid($vocab_id));
